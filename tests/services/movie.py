@@ -2,6 +2,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from dao.model.director import Director
+from dao.model.genre import Genre
 from dao.model.movie import Movie
 from dao.movie import MovieDAO
 from service.movie import MovieService
@@ -11,27 +13,37 @@ from service.movie import MovieService
 def movie_dao_fixture():
     movie_dao = MovieDAO(None)
 
+    d1 = Director(id=1, name="Alex D. Gold")
+    g1 = Genre(id=1, name="Comedy")
+
+    d2 = Director(id=2, name="Gold")
+    g2 = Genre(id=2, name="Horror")
+
     movie1 = Movie(
         id=1,
-        title="Venom",
-        description="Super movie",
-        trailer="www.com",
-        year=2022,
-        rating=7,
-        genre_id=1,
-        director_id=1
+        title="Джанго освобожденный",
+        description="Эксцентричный охотник за головами, также известный как Дантист, промышляет отстрелом самых опасных преступников. Работенка пыльная, и без надежного помощника ему не обойтись. Но как найти такого и желательно не очень дорогого? Освобождённый им раб по имени Джанго – прекрасная кандидатура. Правда, у нового помощника свои мотивы – кое с чем надо сперва разобраться.",
+        trailer="https://www.youtube.com/watch?v=2Dty-zwcPv4",
+        year=2012,
+        rating=8.4,
+        genre=g1,
+        director=d1,
+        genre_id=17,
+        director_id=2
 
     )
 
     movie2 = Movie(
         id=2,
-        title="test2",
-        description="Super",
-        trailer="www.hhjk.com",
-        year=2009,
-        rating=5,
-        genre_id=2,
-        director_id=2
+        title="Одержимость",
+        description="Эндрю мечтает стать великим. Казалось бы, вот-вот его мечта осуществится. Юношу замечает настоящий гений, дирижер лучшего в стране оркестра. Желание Эндрю добиться успеха быстро становится одержимостью, а безжалостный наставник продолжает подталкивать его все дальше и дальше – за пределы человеческих возможностей. Кто выйдет победителем из этой схватки?",
+        trailer="https://www.youtube.com/watch?v=Q9PxDPOo1jw",
+        year=2015,
+        rating=8.5,
+        genre=g2,
+        director=d2,
+        genre_id=4,
+        director_id=8
 
     )
 
@@ -59,7 +71,7 @@ class TestMovieService:
         movies = self.movie_service.get_all()
 
         assert movies is not None
-        assert len(movies) == 1
+        assert len(movies) == 2
 
     def test_create(self):
         movie_d = {
@@ -76,12 +88,9 @@ class TestMovieService:
 
         assert movie.id is not None
 
-    def test_update(self, movie_d):
-        movie_d = {
-            "id": 3,
-            "rating": 200
-        }
-        self.movie_service.update(movie_d)
+    def update(self, movie_d):
+        return self.dao.update(movie_d)
+
 
     def test_delete(self):
         self.movie_service.delete(1)
